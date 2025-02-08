@@ -1,5 +1,6 @@
 import { IHeartbeat } from '@/interfaces/monitor.interface';
 import { formatDistanceToNow } from 'date-fns';
+import { Metadata } from 'next';
 import { toast } from 'react-toastify';
 
 export interface IFrequency{
@@ -144,3 +145,43 @@ export const isEmail = (email: string): boolean => {
     /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$/gi;
   return regexExp.test(email);
 };
+
+
+export function constructMetadata({
+  title = "UptimeX - Monitor your servers",
+  description = "UptimeX is an open source software for monitoring HTTP, TCP, Redis, MongoDB, PostgreSQL servers, and SSL certificates with real-time alerts",
+  image = "/thumbnail.png",
+  icons = "/favicon.ico",
+  noIndex = false
+} : {
+  title?: string,
+  description?: string,
+  image?: string,
+  icons?: string,
+  noIndex?: boolean,
+} = {}) : Metadata{
+  return {
+    title, description, openGraph : {
+      title,
+      description,
+      images: [
+        {url : image}
+      ]
+    },
+    twitter : {
+      card : "summary_large_image",
+      title,
+      description,
+      images:[image],
+      creator : "@PixPerk_"
+    },
+    icons,
+    metadataBase : new URL("https://uptimex.onrender.com"),
+    ...(noIndex && {
+      robots : {
+        index  : false,
+        follow : false
+      }
+    })
+  }
+}

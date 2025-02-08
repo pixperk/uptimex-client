@@ -5,15 +5,13 @@ import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import { ToastContainer } from "react-toastify";
 import "./globals.css";
+import { constructMetadata } from "@/utils/utils";
 
 const inter = Inter({subsets : ["latin"]})
 
 
 
-export const metadata: Metadata = {
-  title: "UptimeX",
-  description: "SaaS platform for monitoring HTTP, TCP, Redis, MongoDB, PostgreSQL servers, and SSL certificates with real-time alerts",
-};
+export const metadata: Metadata = constructMetadata()
 
 export default function RootLayout({
   children,
