@@ -29,7 +29,7 @@ export const useLogin = () : IUserAuth => {
 
     }else{
       const {username, password} = resultSchema.data!
-      console.log(resultSchema.data);
+
 
       const result :FetchResult = await  loginUser({variables :{
         usernameOrEmail : username,
@@ -60,6 +60,7 @@ export const useSocialLogin = (): IUserAuth => {
 
   const loginWithGoogle = async (): Promise<void> => {
     const provider = new GoogleAuthProvider();
+    provider.addScope('email');
     const auth: Auth = getAuth(firebaseApp);
         await setPersistence(auth, browserLocalPersistence);
 
@@ -75,6 +76,7 @@ export const useSocialLogin = (): IUserAuth => {
       socialId: userCredential.user.uid,
       type: 'google',
     };
+
     submitUserData(data as LoginType, authSocialUser, dispatch, router);
   };
 
@@ -87,7 +89,7 @@ export const useSocialLogin = (): IUserAuth => {
       auth,
       provider
     );
-    console.log(userCredential);
+
     const email = userCredential.user.email;
     if(!email)throw new Error('Kindly set your email public on github')
     const nameList = userCredential.user.displayName!.split(' ');

@@ -8,20 +8,21 @@ import {
   MutationFunctionOptions,
   useMutation,
 } from '@apollo/client';
+import {
+  Auth,
+
+  getAuth,
+  GithubAuthProvider,
+  GoogleAuthProvider,
+
+  signInWithPopup,
+
+  UserCredential,
+} from 'firebase/auth';
 import { GraphQLError } from 'graphql';
 import { AppRouterInstance } from 'next/dist/shared/lib/app-router-context.shared-runtime';
 import { useRouter } from 'next/navigation';
 import { Dispatch, useContext, useState } from 'react';
-import {
-  Auth,
-  browserLocalPersistence,
-  getAuth,
-  GithubAuthProvider,
-  GoogleAuthProvider,
-  setPersistence,
-  signInWithPopup,
-  UserCredential,
-} from 'firebase/auth';
 import firebaseApp from '../firebase';
 
 export const useRegister = (): IUserAuth => {
@@ -63,7 +64,7 @@ export const useSocialRegister = (): IUserAuth => {
   const registerWithGoogle = async (): Promise<void> => {
     const provider = new GoogleAuthProvider();
     const auth: Auth = getAuth(firebaseApp);
-    await setPersistence(auth, browserLocalPersistence);
+
     auth.useDeviceLanguage();
     const userCredential: UserCredential = await signInWithPopup(
       auth,
@@ -76,22 +77,27 @@ export const useSocialRegister = (): IUserAuth => {
       socialId: userCredential.user.uid,
       type: 'google',
     };
+
+
+
     submitUserData(data as RegisterType, authSocialUser, dispatch, router);
   };
 
   const registerWithGithub = async (): Promise<void> => {
    try{ const provider = new GithubAuthProvider();
     const auth: Auth = getAuth(firebaseApp);
-        await setPersistence(auth, browserLocalPersistence);
+
 
     auth.useDeviceLanguage();
     const userCredential: UserCredential = await signInWithPopup(
       auth,
       provider
     );
-    console.log(userCredential);
+
     const email = userCredential.user.email;
+    // Check if email is available
     if(!email)throw new Error('Kindly set your email public on github')
+
     const nameList = userCredential.user.displayName!.split(' ');
     const data = {
       username: nameList[0],

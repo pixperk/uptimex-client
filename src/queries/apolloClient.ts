@@ -12,6 +12,7 @@ import { getMainDefinition } from '@apollo/client/utilities';
 import { Kind, OperationTypeNode } from 'graphql';
 import { createClient } from 'graphql-ws';
 import { CachePersistor, LocalStorageWrapper } from 'apollo3-cache-persist';
+import { toast } from 'react-toastify';
 
 const httpUrl: string = process.env.NEXT_PUBLIC_NODE_ENV === 'development' ? 'http://localhost:5000/graphql' :`${process.env.NEXT_PUBLIC_HTTP_SERVER_URL}/graphql`;
 const wsUrl: string =  process.env.NEXT_PUBLIC_NODE_ENV === 'development' ? 'ws://localhost:5000/graphql' :  `${process.env.NEXT_PUBLIC_WS_SERVER_URL}/graphql`;
@@ -21,6 +22,7 @@ const httpLink: ApolloLink = createHttpLink({
   credentials: 'include',
 });
 
+var noWebSocket : boolean = false
 const wsLink = new GraphQLWsLink(
   createClient({
     url: wsUrl,
@@ -28,7 +30,7 @@ const wsLink = new GraphQLWsLink(
     shouldRetry: () => true,
     on: {
       closed: () => {
-        console.log('Client closed');
+        noWebSocket = true;
       },
       connected: () => {
         console.log('Client connected');
@@ -36,6 +38,8 @@ const wsLink = new GraphQLWsLink(
     },
   })
 );
+
+if (noWebSocket) toast.error('WebSocket connection failed. Auto-Refresh will not work.');
 
 const cache: InMemoryCache = new InMemoryCache();
 

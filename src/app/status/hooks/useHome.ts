@@ -64,7 +64,7 @@ export const useHome = (): IUseHome => {
           autoRefreshLoading: true,
         }));
         autoMonitorsRef.current = monitors;
-        console.log(monitors);
+
         client.cache.updateQuery(
           {
             query: GET_USER_MONITORS,

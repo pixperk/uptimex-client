@@ -19,7 +19,7 @@ const HomeHeader: FC = ({}): ReactElement => {
   const userData = apolloClient.readQuery({
     query: CHECK_CURRENT_USER,
   });
-  console.log(userData);
+
 
   const statusPage = pathname.includes('status')
   const uptimePage = pathname.includes('uptime')
