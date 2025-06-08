@@ -4,7 +4,7 @@ import { AUTH_SOCIAL_USER, LOGIN_USER } from "@/queries/auth";
 import { showErrorToast } from "@/utils/utils";
 import { loginSchema, LoginType, RegisterType } from "@/validations/auth";
 import { FetchResult, MutationFunctionOptions, useMutation } from "@apollo/client";
-import { Auth, getAuth, GithubAuthProvider, GoogleAuthProvider, signInWithPopup, UserCredential } from "firebase/auth";
+import { Auth, browserLocalPersistence, getAuth, GithubAuthProvider, GoogleAuthProvider, setPersistence, signInWithPopup, UserCredential } from "firebase/auth";
 import { GraphQLError } from "graphql";
 import { AppRouterInstance } from "next/dist/shared/lib/app-router-context.shared-runtime";
 import { useRouter } from "next/navigation";
@@ -61,6 +61,8 @@ export const useSocialLogin = (): IUserAuth => {
   const loginWithGoogle = async (): Promise<void> => {
     const provider = new GoogleAuthProvider();
     const auth: Auth = getAuth(firebaseApp);
+        await setPersistence(auth, browserLocalPersistence);
+
     auth.useDeviceLanguage();
     const userCredential: UserCredential = await signInWithPopup(
       auth,
@@ -79,6 +81,7 @@ export const useSocialLogin = (): IUserAuth => {
   const loginWithGithub = async (): Promise<void> => {
    try{ const provider = new GithubAuthProvider();
     const auth: Auth = getAuth(firebaseApp);
+        await setPersistence(auth, browserLocalPersistence);
     auth.useDeviceLanguage();
     const userCredential: UserCredential = await signInWithPopup(
       auth,

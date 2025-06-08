@@ -14,9 +14,11 @@ import { useRouter } from 'next/navigation';
 import { Dispatch, useContext, useState } from 'react';
 import {
   Auth,
+  browserLocalPersistence,
   getAuth,
   GithubAuthProvider,
   GoogleAuthProvider,
+  setPersistence,
   signInWithPopup,
   UserCredential,
 } from 'firebase/auth';
@@ -61,6 +63,7 @@ export const useSocialRegister = (): IUserAuth => {
   const registerWithGoogle = async (): Promise<void> => {
     const provider = new GoogleAuthProvider();
     const auth: Auth = getAuth(firebaseApp);
+    await setPersistence(auth, browserLocalPersistence);
     auth.useDeviceLanguage();
     const userCredential: UserCredential = await signInWithPopup(
       auth,
@@ -79,6 +82,8 @@ export const useSocialRegister = (): IUserAuth => {
   const registerWithGithub = async (): Promise<void> => {
    try{ const provider = new GithubAuthProvider();
     const auth: Auth = getAuth(firebaseApp);
+        await setPersistence(auth, browserLocalPersistence);
+
     auth.useDeviceLanguage();
     const userCredential: UserCredential = await signInWithPopup(
       auth,
